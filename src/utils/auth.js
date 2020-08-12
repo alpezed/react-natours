@@ -65,7 +65,6 @@ export default class AuthService {
 
 			return userData;
 		} catch (error) {
-			console.log(error.response);
 			if (error.response && error.response.status === 401) {
 				return Promise.reject(error.response);
 			}

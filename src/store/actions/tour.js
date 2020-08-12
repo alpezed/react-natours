@@ -81,11 +81,8 @@ export const fetchMyTours = (userId, bookings) => async (dispatch, getSate) => {
 
 		const myTours = tours.filter(tour => bookings.includes(tour.id));
 
-		// console.log(tours.data.data.data, myTours, getSate());
-
 		dispatch(fetchUserTours(myTours));
 	} catch (err) {
-		console.log(err);
 		if (err.response) {
 			dispatch(fetchAllTourFailed(err.response.data.message));
 		}
@@ -106,6 +103,7 @@ export const fetchTour = tourId => async dispatch => {
 
 export const fetchUserBookingToursInit = (userId, token) => async dispatch => {
 	try {
+		const { token } = JSON.parse(localStorage.getItem('user'));
 		const response = await axios.get(`/users/${userId}/bookings`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -114,12 +112,8 @@ export const fetchUserBookingToursInit = (userId, token) => async dispatch => {
 
 		// Find tours with the returned IDs
 		const tourIDs = response.data.data.data.map(el => el.tour.id);
-
-		// if (tourId && tourIDs.includes(tourId)) {
 		dispatch(fetchUserBookingTours(tourIDs));
-		// }
 	} catch (err) {
-		console.log('err', err);
 		if (err && err.response) {
 			dispatch(fetchTourFailed(err.response.data.message));
 		}

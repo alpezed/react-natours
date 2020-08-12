@@ -66,6 +66,7 @@ const reducer = (state = initialState, action) => {
 				...state,
 				user: null,
 				token: null,
+				refreshToken: null,
 			};
 
 		case actionTypes.USER_LOGOUT_FAIL:
@@ -160,6 +161,12 @@ const reducer = (state = initialState, action) => {
 				loading: false,
 				user: null,
 				error: action.error,
+			};
+
+		case actionTypes.SAVE_APP_TOKEN:
+			return {
+				...state,
+				token: action.token,
 			};
 
 		default:

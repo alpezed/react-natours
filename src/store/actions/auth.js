@@ -138,13 +138,6 @@ export const checkAuthTimeout = expirationTime => dispatch => {
 export const userSignup = values => async dispatch => {
 	dispatch(userSignupStart());
 	try {
-		// const userData = await new AuthService().signupUser({
-		// 	name: values.name,
-		// 	email: values.email,
-		// 	password: values.password,
-		// 	passwordConfirm: values.password_confirmation,
-		// });
-
 		const userData = await axios({
 			method: 'POST',
 			url: '/users/signup',
@@ -156,13 +149,10 @@ export const userSignup = values => async dispatch => {
 			},
 		});
 
-		console.log(userData);
-
 		dispatch(userSignupSuccess(userData));
 	} catch (err) {
-		console.log(err.response);
 		if (err.response) {
-			dispatch(userSignupFail(err.response.data.message));
+			dispatch(userSignupFail(err?.response?.data?.message));
 		}
 	}
 };
@@ -181,7 +171,6 @@ export const loginUser = values => {
 			dispatch(loginSuccess(authData));
 			// dispatch(checkAuthTimeout(authData.expiresIn));
 		} catch (err) {
-			console.log(err);
 			if (err) {
 				dispatch(loginFail(err.data.message));
 			}
@@ -203,7 +192,6 @@ export const logoutUser = () => async dispatch => {
 
 export const authCheckState = () => dispatch => {
 	const userData = JSON.parse(localStorage.getItem('user'));
-	console.log(userData);
 	if (!userData) {
 		dispatch(logout());
 	} else {
@@ -265,4 +253,26 @@ export const resetPassword = (data, token) => async dispatch => {
 			dispatch(resetPasswordFailed(err.response.data.message));
 		}
 	}
+};
+
+export const saveAppToken = token => {
+	return {
+		type: 'SAVE_APP_TOKEN',
+		token,
+	};
+};
+
+export const refreshToken = refreshToken => dispatch => {
+	return new Promise((resolve, reject) => {
+		axios
+			.post('/users/refresh-token', {
+				refreshToken,
+			})
+			.then(response => {
+				// console.log('response', response);
+				dispatch(saveAppToken(response.data.token));
+				resolve(response);
+			})
+			.catch(error => reject(error));
+	});
 };

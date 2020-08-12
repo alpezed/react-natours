@@ -11,6 +11,7 @@ import tourReducer from './store/reducers/tour';
 import bookingReducer from './store/reducers/booking';
 import authReducer from './store/reducers/auth';
 import reviewReducer from './store/reducers/review';
+import { axiosInterceptors } from './axios';
 
 const composeEnhancers =
 	process.env.NODE_ENV === 'development'
@@ -28,6 +29,8 @@ const store = createStore(
 	rootReducer,
 	composeEnhancers(applyMiddleware(thunk))
 );
+
+axiosInterceptors(store);
 
 ReactDOM.render(
 	<Provider store={store}>

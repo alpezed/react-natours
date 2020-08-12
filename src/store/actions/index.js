@@ -7,6 +7,7 @@ export {
 	userSignup,
 	forgotPassword,
 	resetPassword,
+	refreshToken,
 } from './auth';
 export { bookTour } from './booking';
 export {
